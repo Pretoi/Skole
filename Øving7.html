@@ -1,0 +1,193 @@
+<html>
+<body>
+  <div>Menu:
+    <a href="#/personListPage">Person List</a>
+    <a href="#/about">About</a>
+  </div>
+  <div class="page" id="personListPage" style="display: none;">
+    <b>Person List</b>
+    <ul id="personListUl"></ul>
+    <div>
+      <label>Name: </label><input type="text" id="personListNameInput"></input>
+      <label>Age: </label><input type="text" id="personListAgeInput"></input>
+      <label>By: </label><input type="text" id="personListByInput"></input>
+      <button id="personListAddPersonButton">Add person</button>
+    </div>
+  </div>
+  <div class="page" id="personDetailsPage" style="display: none;">
+    <b>Person Details</b>
+    <div>Name: <span id="personDetailsName"></span></div>
+    <div>Age: <span id="personDetailsAge"></span></div>
+    <div>By: <span id="personDetailsBy"></span></div>
+    <button id=editalt>Endre</button>
+    <button id=fjern>Slett</button>
+  </div>
+  <div class="page" id="about" style="display: none;">
+    Dette er info om siden
+  </div>
+  <button onclick="console.log(persons)">check</button>
+<script>
+function updatePages() {
+  let parts = window.location.hash.split('/');
+
+  if(parts.length < 2) {                       // If parts[1] is not set
+    window.location.hash = '#/personListPage'; // Set default page
+  }
+
+  for(let page of document.getElementsByClassName('page')) {
+    if(page.id == parts[1]) {
+      page.style.display = 'inline'; // Show page
+      if(page.onshow)  // If onshow is set
+        page.onshow(); // call the onshow() function
+    }
+    else {
+      page.style.display = 'none';  // Hide page
+    }
+  }
+}
+
+document.body.onload = function() { // When the application is fully loaded:
+  updatePages();
+
+
+}
+
+document.body.onhashchange = function() {
+  updatePages();
+}
+
+
+/*******************************************************************************
+* Common application data (for all pages)
+*******************************************************************************/
+let persons = [{name: 'Kari', age: 30},
+               {name: 'Ola', age: 25}];
+
+/*******************************************************************************
+* personListPage
+*******************************************************************************/
+let personListPage = document.getElementById('personListPage');
+let personListUl = document.getElementById('personListUl');
+let personListNameInput = document.getElementById('personListNameInput');
+let personListAgeInput = document.getElementById('personListAgeInput');
+let personListByInput = document.getElementById('personListByInput')
+let personListAddPersonButton = document.getElementById('personListAddPersonButton');
+
+// Update the HTML-element personListUl from the contents of the table persons
+function updatePersonList() {
+  // Remove elements from personListUl:
+  while(personListUl.firstChild) {
+    personListUl.removeChild(personListUl.firstChild);
+  }
+
+  // Add elements to personListUl:
+  for(let personsIndex = 0; personsIndex < persons.length; personsIndex++) {
+    let a = document.createElement('a');
+    a.className = "delete"
+    a.href = '#/personDetailsPage/' + personsIndex;
+    a.textContent = persons[personsIndex].name;
+    let dele = document.createElement('button');
+    dele.setAttribute ("id", personsIndex)
+    dele.setAttribute ("onclick", "fjerndenne()")
+    dele.innerHTML = 'Fjern';
+    let li = document.createElement('li');
+    li.appendChild(a);
+    li.appendChild(dele);
+
+
+
+    personListUl.appendChild(li);
+
+
+
+  }
+}
+function fjerndenne() {
+
+  navn=this.id
+  persons.splice(navn, 1);
+    updatePersonList()
+    }
+
+
+
+personListPage.onshow = function() {
+  updatePersonList();
+}
+
+personListAddPersonButton.onclick = function(event) {
+  // Prevent default event action (form submit):
+  event.preventDefault();
+
+  // Add person from inputs. The personListAgeInput string is converted to a number using Number():
+  persons.push({name: personListNameInput.value, age: Number(personListAgeInput.value), by: personListByInput.value});
+
+  // Reset input values:
+  personListNameInput.value='';
+  personListAgeInput.value='';
+  personListByInput.value="";
+
+  updatePersonList();
+}
+
+/*******************************************************************************
+* personDetailsPage
+*******************************************************************************/
+let personDetailsPage = document.getElementById('personDetailsPage');
+let personDetailsName = document.getElementById('personDetailsName');
+let personDetailsAge = document.getElementById('personDetailsAge');
+let personDetailsBy = document.getElementById("personDetailsBy")
+
+personDetailsPage.onshow = function() {
+
+
+  var parts = window.location.hash.split('/'); // parts[2] contains the index of the person
+  var personsIndex = Number(parts[2]);         // to be shown from the persons table
+  oppdater()
+function oppdater() {
+
+  // Show details of the person at personsIndex in the persons table:
+  personDetailsName.textContent = persons[personsIndex].name;
+  personDetailsAge.textContent = persons[personsIndex].age
+  personDetailsBy.textContent = persons[personsIndex].by
+
+  let editnavn = document.createElement('input');
+  editnavn.setAttribute("id", "endrenavn")
+    personDetailsName.appendChild(editnavn);
+
+
+
+
+    let editalder = document.createElement('input');
+    editalder.setAttribute("id", "endrealder")
+      personDetailsAge.appendChild(editalder);
+
+    let editby = document.createElement('input');
+    editby.setAttribute("id", "endreby")
+    personDetailsBy.appendChild(editby);
+
+
+
+}
+
+
+editalt.onclick = function() {
+
+  persons[personsIndex].name = endrenavn.value
+  persons[personsIndex].age = Number(endrealder.value)
+  persons[personsIndex].by = endreby.value
+  console.log(personsIndex)
+oppdater()}
+
+fjern.onclick = function() {
+
+
+  persons.splice(personsIndex, 1);
+    window.location.href ="#/personListPage"
+    }
+
+}
+
+</script>
+</body>
+</html>
