@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Øving 1
+    </title>
+</head>
+<body onload="skrivUt()">
+Volvo <button onclick="volvo.gass(), skrivUt()">Gass</button> <button onclick="volvo.brems(), skrivUt()">Brems</button> <br>
+Audi <button onclick="audi.gass(), skrivUt()">Gass</button> <button onclick="audi.brems(), skrivUt()">Brems</button> <br>
+Ferrari <button onclick="ferrari.gass(), skrivUt()">Gass</button> <button onclick="ferrari.brems(), skrivUt()">Brems</button> <br><br>
+
+<div id="ut"></div>
+
+<script>
+  class Bil{
+    constructor(registreringsnr, merke, arsmodell, hastighet){
+      this.registreringsnr = registreringsnr;
+      this.merke = merke;
+      this.arsmodell = arsmodell;
+      this.hastighet = hastighet;
+    }
+    gass(){
+      this.hastighet += 10;
+    }
+    brems(){
+      this.hastighet -= 10;
+    }
+  }
+
+  function skrivUt(){
+    ut.innerHTML = "Volvo: " + volvo.hastighet + "<br>" +
+    "Audi: " + audi.hastighet + "<br>" + 
+    "Ferrari: " + ferrari.hastighet 
+  }
+
+  let volvo = new Bil(12345, "Volvo", 1996, 175);
+  let audi = new Bil(54321, "Audi", 2001, 200);
+  let ferrari = new Bil(86421, "Ferrari", 2018, 201); 
+
+</script>
+</body>
+</html>
